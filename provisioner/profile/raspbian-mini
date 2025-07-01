@@ -1,0 +1,25 @@
+debian/bookworm/arm64/base-apt
+# adds raspberry deb repository
+rpi/debian/bookworm/apt
+# sets a config.txt and cmdline.txt file in /boot/firmware /!\ may override for clock and NVMe
+rpi/boot-firmware
+# sets our own config.txt and cmdline
+kiwix/boot-config
+# installs Pi5-only kernel and disable update_initramfs
+rpi/arm64/linux-image-2712
+# essential tools: cryptsetup e2fsprogs wget ca-certificates net-tools iputils-ping procps nano zstd
+rpi/base/essential
+# ca-certificates package
+app-misc/ca-certificates
+# misc tools: raspi-config rpi-eeprom raspi-utils raspi-utils-core raspi-utils-dt flashrom
+rpi/misc-utils
+# installs networkd and timesyncd for auto dhcp on eth0 and ntp
+sys-apps/systemd-net-min
+# installs and configure SSH for configured user
+net-misc/openssh-server
+# sets /etc/hosts with hostname
+rpi/misc-skel
+# add user with its credentials
+rpi/user-credentials
+# kiwix provisioner app
+kiwix/dependencies

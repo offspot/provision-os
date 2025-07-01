@@ -1,0 +1,39 @@
+---
+name: provisioner-deps
+mmdebstrap:
+#  setup-hooks:
+    # Could perform chroot ops here prior to pkg download/extract
+#  essential-hooks:
+    # Could perform chroot ops here prior to installing non-essential pkgs
+  customize-hooks:
+    # Could perform ops here after the chroot is set up and packages installed, e.g.
+    # add /etc/default/locale
+    - printf 'LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8\nLANGUAGE=en_US.UTF-8\n' > $1/etc/default/locale
+    # - sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' $1/etc/locale.gen
+    # - chroot $1 locale-gen
+    - chroot $1 python3 -m venv /usr/local/lib/provision-env
+    # this is where we install our package and auto-pull deps
+    - chroot $1 /usr/local/lib/provision-env/bin/pip install https://github.com/offspot/provisioner/archive/refs/heads/main.zip
+#  cleanup-hooks:
+    # Could perform chroot ops here when cleaning up
+  packages:
+    # pkg-config for some dependencies that needs compilation? (pyparted)
+    - pkg-config
+    - libfontconfig
+    - build-essential
+    - python3-dev
+    # network
+    - iw
+    - firmware-brcm80211
+    - rfkill
+    - wpasupplicant
+    - wireless-regdb
+    - network-manager
+    - python3-pip
+    - python3-venv
+    - libegl1
+    - libglx0
+    - libopengl0
+    - rpi-imager
+    - vim
+    - libparted-dev

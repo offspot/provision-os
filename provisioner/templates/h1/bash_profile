@@ -1,0 +1,5 @@
+
+# start kiosk (provisioner app) unless NOKIOSK is set
+if [ -z "$NOKIOSK" ]; then
+  /usr/local/bin/kiosk
+fi
