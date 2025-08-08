@@ -25,3 +25,5 @@ rpi/user-credentials
 kiwix/locales
 # kiwix provisioner app
 kiwix/dependencies
+# kiwix kiosk mechanism (launches app fullscreen in Wayland terminal)
+kiwix/kiosk

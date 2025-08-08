@@ -14,8 +14,6 @@ mmdebstrap:
     - install -m 644 $IGconf_ext_dir/templates/h1/logind-poweroff.conf $1/etc/systemd/logind.conf.d/
     - mkdir -p $1/etc/systemd/system/getty@tty1.service.d/
     - install -m 644 $IGconf_ext_dir/templates/h1/autologin.conf $1/etc/systemd/system/getty@tty1.service.d/
-    - install -m 755 $IGconf_ext_dir/templates/h1/provision-kiosk.sh $1/usr/local/bin/kiosk
-    - install -m 644 $IGconf_ext_dir/templates/h1/bash_profile $1/root/.bash_profile
     - sed -i '/pam_motd/s/^/#/' $1/etc/pam.d/login
 
 

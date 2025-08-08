@@ -1,0 +1,16 @@
+[Unit]
+Description=Kiosk Wayland Session
+After=multi-user.target
+
+[Service]
+User=root
+TTYPath=/dev/tty1
+Environment="XDG_RUNTIME_DIR=/root"
+Environment="RUNKIOSK=1"
+Environment="XCURSOR_PATH=/usr/share/icons"
+Restart=always
+ExecStart=/usr/bin/cage -- foot --fullscreen --login-shell -D /root
+StandardError=journal
+
+[Install]
+WantedBy=default.target
