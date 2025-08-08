@@ -21,5 +21,7 @@ net-misc/openssh-server
 rpi/misc-skel
 # add user with its credentials
 rpi/user-credentials
+# handle locales
+kiwix/locales
 # kiwix provisioner app
 kiwix/dependencies
