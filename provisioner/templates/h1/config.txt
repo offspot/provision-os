@@ -54,3 +54,7 @@ dtoverlay=i2c-rtc,pcf2127
 
 # Enable PCI Express Gen.3
 dtparam=pciex1_gen=3
+
+# enable sound via HDMI
+hdmi_group=1
+hdmi_drive=2
