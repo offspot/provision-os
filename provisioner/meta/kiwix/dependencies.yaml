@@ -33,3 +33,4 @@ mmdebstrap:
     - rpi-imager
     - vim
     - libparted-dev
+    - cgroupfs-mount
