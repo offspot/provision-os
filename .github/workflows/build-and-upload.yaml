@@ -1,0 +1,89 @@
+name: Build & Upload
+run-name: ${{ github.event.head_commit.message || 'Manual Build & Upload' }} - ${{ github.ref_type }}/${{ github.ref_name }}
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publish-to-webdav:
+        description: Publish base Image to WebDAV, for testing purpose. Value 'yes' expected.
+        required: false
+        default: 'yes'
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Define target
+        shell: python
+        run: |
+          import os
+          import re
+
+          ref_name = os.getenv("GITHUB_REF_NAME")
+          if os.getenv("GITHUB_EVENT_NAME", "") == "release":
+            is_release = True
+            version = ref_name
+          else:
+            is_release = False
+            # ref_name for PR is prID/merge
+            pr_match = re.match(r"^(\d+)\/merge$", ref_name)
+            if pr_match:
+              ref_name = f"pr{pr_match.groups()[0]}"
+            version = f"{ref_name}-" if ref_name != "main" else ""
+            version += os.getenv("GITHUB_SHA", "")[:7]
+
+          radical = f"provision-os-{version}"
+          with open(os.getenv("GITHUB_ENV"), "a") as fh:
+            fh.write(f"IS_RELEASE={'yes' if is_release else ''}\n")
+            fh.write(f"BASE_IMAGE_FILENAME={radical}.img\n")
+            fh.write(f"BASE_IMAGE_FILENAME_MD5={radical}.img.md5\n")
+            fh.write(f"BASE_IMAGE_FILENAME_XZ={radical}.img.xz\n")
+            fh.write(f"BASE_IMAGE_FILENAME_XZ_MD5={radical}.img.xz.md5\n")
+
+      - name: Dowload rpi-image-gen
+        run: wget https://github.com/raspberrypi/rpi-image-gen/archive/refs/heads/master.zip && unzip ./master.zip && rm -f ./master.zip && mv rpi-image-gen-master rpi-image-gen
+
+      - name: Install rpi-image-gen deps
+        working-directory: ./rpi-image-gen
+        run: sudo ./install_deps.sh
+
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          path: 'rpi-image-gen/provisioner'
+
+      - name: Build image
+        working-directory: ./rpi-image-gen
+        run: ./build.sh -c provisioner -D provisioner -o provisioner/provisioner.options
+
+      - name: Rename file
+        working-directory: ./rpi-image-gen
+        run: mv ./work/kiwix-provisioner/deploy/kiwix-provisioner.img ../${{ env.BASE_IMAGE_FILENAME }}
+
+      - name: Compress image
+        run: |
+          sudo apt install xz-utils
+          xz --keep --compress ${{ env.BASE_IMAGE_FILENAME }}
+
+      - name: Compute MD5 checksum
+        run: |
+          md5sum "${{ env.BASE_IMAGE_FILENAME }}" > "${{ env.BASE_IMAGE_FILENAME_MD5 }}"
+          md5sum "${{ env.BASE_IMAGE_FILENAME_XZ }}" > "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
+
+      - name: Upload base image to WebDAV
+        if: ${{ env.IS_RELEASE }} || github.event.inputs.publish-to-webdav == 'yes'
+        run: |
+          echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to WebDAV..."
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_MD5 }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
+          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME }}"
+          echo "### Artefacts" >> $GITHUB_STEP_SUMMARY
+          echo "- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [${{ env.BASE_IMAGE_FILENAME }}](https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [${{ env.BASE_IMAGE_FILENAME_MD5 }}](https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_MD5 }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}](https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }})" >> $GITHUB_STEP_SUMMARY
