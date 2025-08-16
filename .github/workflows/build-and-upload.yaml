@@ -44,6 +44,9 @@ jobs:
             fh.write(f"BASE_IMAGE_FILENAME_XZ={radical}.img.xz\n")
             fh.write(f"BASE_IMAGE_FILENAME_XZ_MD5={radical}.img.xz.md5\n")
 
+      - name: Checkout code
+        uses: actions/checkout@v5
+
       - name: Dowload rpi-image-gen
         run: wget https://github.com/raspberrypi/rpi-image-gen/archive/refs/heads/master.zip && unzip ./master.zip && rm -f ./master.zip && mv rpi-image-gen-master rpi-image-gen
 
@@ -51,10 +54,9 @@ jobs:
         working-directory: ./rpi-image-gen
         run: sudo ./install_deps.sh
 
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          path: 'rpi-image-gen/provisioner'
+      - name: Symlink provisioner inside rpi-image-gen
+        working-directory: ./rpi-image-gen
+        run: ln -sf ../provisioner ./provisioner
 
       - name: Build image
         working-directory: ./rpi-image-gen
