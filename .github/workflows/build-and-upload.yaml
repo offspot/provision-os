@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-24.04
     steps:
       - name: Define target
         shell: python
@@ -46,6 +46,12 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v5
+
+      - name: Setup qemu
+        run: |
+          sudo modprobe binfmt_misc
+          sudo apt update
+          sudo apt install qemu-user-static
 
       - name: Dowload rpi-image-gen
         run: wget https://github.com/raspberrypi/rpi-image-gen/archive/refs/heads/master.zip && unzip ./master.zip && rm -f ./master.zip && mv rpi-image-gen-master rpi-image-gen
