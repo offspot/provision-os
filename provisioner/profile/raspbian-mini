@@ -1,3 +1,4 @@
+kiwix/keys
 debian/bookworm/arm64/base-apt
 # adds raspberry deb repository
 rpi/debian/bookworm/apt
