@@ -83,9 +83,7 @@ jobs:
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ }}"
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_MD5 }}"
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
-          curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME }}"
           echo "### Artefacts" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ }})" >> $GITHUB_STEP_SUMMARY
-          echo "- [${{ env.BASE_IMAGE_FILENAME }}](https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME }})" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME_MD5 }}](https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_MD5 }})" >> $GITHUB_STEP_SUMMARY
           echo "- [${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}](https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }})" >> $GITHUB_STEP_SUMMARY
