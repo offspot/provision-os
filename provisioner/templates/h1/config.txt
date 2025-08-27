@@ -49,9 +49,6 @@ otg_mode=1
 dtoverlay=dwc2,dr_mode=host
 
 [all]
-# enable RTC clock modules
-dtoverlay=i2c-rtc,pcf2127
-
 # Enable PCI Express Gen.3
 dtparam=pciex1_gen=3
 

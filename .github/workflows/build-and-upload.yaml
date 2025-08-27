@@ -5,8 +5,8 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
-      publish-to-webdav:
-        description: Publish base Image to WebDAV, for testing purpose. Value 'yes' expected.
+      publish-to-s3:
+        description: Publish Image to S3, for testing purpose. Value 'yes' expected.
         required: false
         default: 'yes'
   release:
@@ -76,8 +76,24 @@ jobs:
           md5sum "${{ env.BASE_IMAGE_FILENAME }}" > "${{ env.BASE_IMAGE_FILENAME_MD5 }}"
           md5sum "${{ env.BASE_IMAGE_FILENAME_XZ }}" > "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
 
+      - name: Upload base image to S3
+        if: github.event.inputs.publish-to-s3 == 'yes'
+        env:
+          S3URL: ${{ secrets.BRANCHES_S3_URL }}
+        run: |
+          pip3 install "kiwixstorage==0.8.3" "progressbar2==4.0.0" "humanfriendly==10.0"
+          echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to S3..."
+          s3upload "${{ env.BASE_IMAGE_FILENAME_XZ }}"
+          s3upload "${{ env.BASE_IMAGE_FILENAME_MD5 }}"
+          s3upload "${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}"
+          echo '### Artefacts' >> $GITHUB_STEP_SUMMARY
+          echo '- [${{ env.BASE_IMAGE_FILENAME_XZ }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME_XZ }})' >> $GITHUB_STEP_SUMMARY
+          echo '- [${{ env.BASE_IMAGE_FILENAME_MD5 }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME_MD5 }})' >> $GITHUB_STEP_SUMMARY
+          echo '- [${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }}](https://s3.eu-central-1.wasabisys.com/it-offspot-base-branches/${{ env.BASE_IMAGE_FILENAME_XZ_MD5 }})' >> $GITHUB_STEP_SUMMARY
+
+
       - name: Upload base image to WebDAV
-        if: ${{ env.IS_RELEASE }} || github.event.inputs.publish-to-webdav == 'yes'
+        if: ${{ env.IS_RELEASE }}
         run: |
           echo "Uploading image ${{ env.BASE_IMAGE_FILENAME_XZ }} & info to WebDAV..."
           curl -u "${{ secrets.DRIVE_CREDENTIALS }}" -T "${{ env.BASE_IMAGE_FILENAME_XZ }}" -sw '%{http_code}' "https://drive.offspot.it/provision-os/${{ env.BASE_IMAGE_FILENAME_XZ }}"
