@@ -6,6 +6,7 @@ mmdebstrap:
 #  essential-hooks:
     # Could perform chroot ops here prior to installing non-essential pkgs
   customize-hooks:
+    - install -m 644 $IGconf_ext_dir/templates/h1/02-wlan0.network $1/etc/systemd/network/
     # Could perform ops here after the chroot is set up and packages installed, e.g.
     - chroot $1 python3 -m venv /usr/local/lib/provision-env
     # this is where we install our package and auto-pull deps
