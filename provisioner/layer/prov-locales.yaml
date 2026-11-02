@@ -1,8 +1,15 @@
+# METABEGIN
+# X-Env-Layer-Name: prov-locales
+# X-Env-Layer-Version: 1.0.0
+# X-Env-Layer-Category: layer
+# X-Env-Layer-Desc: 
+# X-Env-Layer-Requires: prov-base
+# METAEND
 ---
-name: locales
 mmdebstrap:
   customize-hooks:
   - printf 'LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8\nLANGUAGE=en_US.UTF-8\n' > $1/etc/default/locale
   - chroot $1 sh -c "apt install -y locales"
   - sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' $1/etc/locale.gen
   - chroot $1 locale-gen
+

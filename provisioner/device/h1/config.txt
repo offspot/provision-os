@@ -5,7 +5,8 @@
 # Uncomment some or all of these to enable the optional hardware interfaces
 #dtparam=i2c_arm=on
 #dtparam=i2s=on
-#dtparam=spi=on
+# we need SPI for live eeprom update
+dtparam=spi=on
 
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
@@ -30,20 +31,17 @@ max_framebuffers=2
 # Use the kernel's default instead.
 disable_fw_kms_setup=1
 
-# Run in 64-bit mode
-arm_64bit=1
-
 # Disable compensation for displays with overscan
 disable_overscan=1
 
 # Run as fast as firmware / board allows
 arm_boost=1
 
-[cm4]
-# Enable host mode on the 2711 built-in XHCI USB controller.
-# This line should be removed if the legacy DWC2 controller is required
-# (e.g. for USB device mode) or if USB support is not required.
-otg_mode=1
+# Run in 64-bit mode
+arm_64bit=1
+
+[pi5]
+BOOT_UART=0
 
 [cm5]
 dtoverlay=dwc2,dr_mode=host
@@ -52,6 +50,19 @@ dtoverlay=dwc2,dr_mode=host
 # Enable PCI Express Gen.3
 dtparam=pciex1_gen=3
 
+# Pretends the display supports every HDMI audio format, including DTS/AC3 passthrough,
+# even if its EDID does not advertise them. This is stronger than simply enabling stereo HDMI audio.
+hdmi_force_edid_audio=1
+# Pretends an HDMI display is connected even when the hotplug signal is absent.
+# Useful for displays that are slow to power up or do not signal hotplug correctly.
+hdmi_force_hotplug=1
+# Increases HDMI signal drive strength for marginal or long cables.
+# It is explicitly ignored on Raspberry Pi 4.
+config_hdmi_boost=7
 # enable sound via HDMI
 hdmi_group=1
+# Selects the DMT group, normally used for computer monitors.
+hdmi_group=2
+# Selects true HDMI output, including audio. Value 1 selects DVI-style output without audio.
 hdmi_drive=2
+

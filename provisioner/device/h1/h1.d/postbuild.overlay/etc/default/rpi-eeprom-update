@@ -1,0 +1,8 @@
+FIRMWARE_RELEASE_STATUS="default"
+# this is mandatory for the rpi-eeprom-update to happen live
+# ie directly flashed instead of just being written to boot part
+# and ran on next reboot.
+RPI_EEPROM_IMMEDIATE_UPDATE=1
+# not supposed to update firmware of device from provision-os
+# via traditional /boot/firmware mechanism.
+BOOTFS=/tmp

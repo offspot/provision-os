@@ -1,0 +1,54 @@
+device:
+  layer: h1
+  
+  hostname: kiwix-provisioner
+  user1: kiwix
+  # user1pass: kiwix
+  # bypasses the device-user-credentials policy
+  user1passhash: $y$j9T$0q7/wtPDVae6ArvqdbOLn.$jBcPQaV8Kcg4YeSWZjsqk1K2cir16ljzX8TpZa5otq4
+  # locale1: en_US.UTF-8
+  storage_type: nvme
+  # timezone_area: Etc
+  # timezone_city: UTC
+  ssh_user1: y
+
+ssh:
+  pubkey_only: n
+  pubkey_user1: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIByVJVXfimW3nuS/440H0qbr8ZjNBm61OzGV6pNlAlXj reg@faku
+
+locale:
+  timezone: UTC
+  default: en_US.UTF-8
+  keyboard_keymap: us
+  keyboard_layout: English (US)
+
+image:
+  layer: myimage
+  boot_part_size: 256M
+  system_part_size: 2G
+  name: kiwix-provisioner
+
+layer:
+  - debian-trixie-arm64
+  - rpi-debian-trixie
+  - rpi-misc-skel
+  - rpi-essential-base
+  - rpi-misc-utils
+  - rpi-splash-screen
+  - systemd-net-min
+  - systemd-timesyncd
+  - ca-certificates
+  - locale-base
+  - device-user-credentials
+  - device-user-admin
+  - prov-base
+  - wireless-regulatory
+  - openssh-server
+  - prov-boot-config
+  - prov-locales
+  - prov-deps
+  - prov-kiosk
+
+splash:
+  image_path: ${@SRCROOT}/splash.tga
+  update_cmdline: n

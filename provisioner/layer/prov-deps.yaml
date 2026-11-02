@@ -1,0 +1,53 @@
+# METABEGIN
+# X-Env-Layer-Name: prov-deps
+# X-Env-Layer-Version: 1.0.0
+# X-Env-Layer-Category: layer
+# X-Env-Layer-Desc: 
+# X-Env-Layer-Requires: prov-base
+# METAEND
+---
+mmdebstrap:
+  # setup-hooks:
+    # Could perform chroot ops here prior to pkg download/extract
+# essential-hooks:
+# Could perform chroot ops here prior to installing non-essential pkgs
+  customize-hooks:
+    - install -m 644 02-wlan0.network $1/etc/systemd/network/
+    # Could perform ops here after the chroot is set up and packages installed, e.g.
+    - chroot $1 python3 -m venv /usr/local/lib/provision-env
+    # this is where we install our package and auto-pull deps
+    # - chroot $1 /usr/local/lib/provision-env/bin/pip install https://github.com/offspot/provisioner/archive/refs/tags/1.0.2.zip
+    - chroot $1 /usr/local/lib/provision-env/bin/pip install https://github.com/offspot/provisioner/archive/refs/heads/next.zip
+    # cgroupfs-mount not in trixie
+    - install -m 755 cgroupfs-mount $1/usr/bin/
+    - install -m 755 cgroupfs-umount $1/usr/bin/
+#  cleanup-hooks:
+    # Could perform chroot ops here when cleaning up
+  packages:
+    # pkg-config for some dependencies that needs compilation? (pyparted)
+    - pkg-config
+    - libfontconfig
+    - build-essential
+    - python3-dev
+    # network
+    - iw
+    - firmware-brcm80211
+    - rfkill
+    - wpasupplicant
+    - wireless-regdb
+    - network-manager
+    - ca-certificates
+    - python3-pip
+    - python3-venv
+    - libegl1
+    - libglx0
+    - libopengl0
+    - fdisk
+    - rpi-imager
+    - rpi-eeprom
+    - util-linux-extra
+    - alsa-utils
+    - vim
+    - libparted-dev
+
+    

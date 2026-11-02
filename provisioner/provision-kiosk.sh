@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 # TODO: handle properly
@@ -9,7 +9,7 @@ sleep 3
 /usr/local/lib/provision-env/bin/provisioner
 ret=$?
 
-if [[ $ret -neq 0 ]] then
+if [[ ! $ret -eq 0 ]] ; then
   echo "Hotspot Provioner exited with status=${ret}."
   read -p "Press ENTER when ready to halt." </dev/tty
 fi

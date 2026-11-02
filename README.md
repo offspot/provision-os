@@ -36,7 +36,7 @@ sudo ./install_deps.sh
 ln -sf ../provisioner ./provisioner
 
 # build the image
-./build.sh -c provisioner -D provisioner -o provisioner/provisioner.options
+./rpi-image-gen build -S provisioner/ -c provisioner/config/provision-os.yaml
 
 # find the resulting image
 ls -l ./work/kiwix-provisioner/deploy/kiwix-provisioner.img
@@ -44,7 +44,7 @@ ls -l ./work/kiwix-provisioner/deploy/kiwix-provisioner.img
 
 ## Key Components
 
-- A copy of `debian/bookworm/arm64/base-apt` that downloads debian keys and is required if building on non-debian.
+- A copy of Slim example that targets pi5 only (H1).
 - `en_US.UTF-8` locale setup
 - [provisioner](https://github.com/offspot/provisioner/) install with all its dependencies
 - Custom `config.txt` to enable PCIeGen3

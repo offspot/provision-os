@@ -1,0 +1,9 @@
+# METABEGIN
+# X-Env-Layer-Name: prov-base
+# X-Env-Layer-Version: 1.0.0
+# X-Env-Layer-Category: layer
+# X-Env-Layer-Desc: Base layer for our customisations
+# METAEND
+---
+# mmdebstrap:
+#  customize-hooks:

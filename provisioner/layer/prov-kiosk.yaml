@@ -1,0 +1,33 @@
+# METABEGIN
+# X-Env-Layer-Name: prov-kiosk
+# X-Env-Layer-Version: 1.0.0
+# X-Env-Layer-Desc: Kiwix Provisioner App launched on startup
+# X-Env-Layer-Requires: prov-deps
+#
+# X-Env-VarPrefix: prov-kiosk
+# METAEND
+---
+mmdebstrap:
+  packages:
+    - cage
+    - foot
+    - sox
+    - libsox-fmt-mp3
+    - libid3tag0
+    - fonts-firacode
+  customize-hooks:
+    - install -m 755 provision-kiosk.sh $1/usr/local/bin/kiosk
+    - |
+      cd /tmp/ \
+      && wget https://dev.kiwix.org/offspot/provision-os/cursor/Transparent_Cursor_Theme-main.tar.gz \
+      && tar xf Transparent_Cursor_Theme-main.tar.gz \
+      && mv Transparent_Cursor_Theme-main/Transparent $1/usr/share/icons/default \
+      && rm -rf ./Transparent_Cursor_Theme-main \
+      && rm -r ./Transparent_Cursor_Theme-main.tar.gz \
+      && cd -
+    - |
+      mkdir -p $1/usr/share/fonts/truetype/apple-emoji \
+      && wget -O $1/usr/share/fonts/truetype/apple-emoji/AppleColorEmoji.ttf https://dev.kiwix.org/offspot/provision-os/fonts/AppleColorEmoji.ttf
+    - install -m 644 kiosk.service $1/etc/systemd/system/kiosk.service
+    - $BDEBSTRAP_HOOKS/enable-units "$1" kiosk.service
+    - install -m 644 bash_profile $1/root/.bash_profile

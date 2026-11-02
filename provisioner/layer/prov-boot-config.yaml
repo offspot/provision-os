@@ -1,0 +1,22 @@
+# METABEGIN
+# X-Env-Layer-Name: prov-boot-config
+# X-Env-Layer-Version: 1.0.0
+# X-Env-Layer-Category: layer
+# X-Env-Layer-Desc: 
+# X-Env-Layer-Requires: device-user-admin,systemd-net-min,systemd-timesyncd
+# METAEND
+---
+mmdebstrap:
+  packages:
+    - raspi-firmware
+    # used for systemd-logind (poweroff button)
+    - dbus
+    - initramfs-tools
+  customize-hooks:
+    - mkdir -p $1/etc/systemd/logind.conf.d
+    - install -m 644 logind-poweroff.conf $1/etc/systemd/logind.conf.d/
+    - mkdir -p $1/etc/systemd/system/getty@tty1.service.d/
+    - install -m 644 autologin.conf $1/etc/systemd/system/getty@tty1.service.d/
+    - sed -i '/pam_motd/s/^/#/' $1/etc/pam.d/login
+
+

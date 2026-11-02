@@ -1,0 +1,1 @@
+console=ttyAMA10,115200 root=/dev/disk/by-label/ROOT rootfstype=ext4 fsck.repair=yes rootwait fullscreen_logo=1 fullscreen_logo_name=logo.tga vt.global_cursor_default=0 systemd.unified_cgroup_hierarchy=0
