@@ -24,7 +24,7 @@ locale:
 
 image:
   layer: myimage
-  boot_part_size: 256M
+  boot_part_size: 128M
   system_part_size: 2G
   name: kiwix-provisioner
 
