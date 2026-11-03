@@ -1,5 +1,6 @@
 
 # start kiosk (provisioner app) ONLY if RUNKIOSK is set to 1
 if [ "$RUNKIOSK" = "1" ]; then
+  /usr/local/lib/provision-env/bin/provisioner-reset
   /usr/local/lib/provision-env/bin/provisioner-script
 fi
