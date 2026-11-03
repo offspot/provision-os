@@ -64,7 +64,7 @@ jobs:
 
       - name: Rename file
         working-directory: ./rpi-image-gen
-        run: mv ./work/kiwix-provisioner/deploy/kiwix-provisioner.img ../${{ env.BASE_IMAGE_FILENAME }}
+        run: mv ./work/image-kiwix-provisioner/kiwix-provisioner.img ../${{ env.BASE_IMAGE_FILENAME }}
 
       - name: Compress image
         run: |
