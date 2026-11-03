@@ -16,7 +16,6 @@ mmdebstrap:
     - libid3tag0
     - fonts-firacode
   customize-hooks:
-    - install -m 755 provision-kiosk.sh $1/usr/local/bin/kiosk
     - |
       cd /tmp/ \
       && wget https://dev.kiwix.org/offspot/provision-os/cursor/Transparent_Cursor_Theme-main.tar.gz \
